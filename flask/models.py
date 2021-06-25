@@ -33,7 +33,6 @@ class BaseModelMixin:
         except exc.IntegrityError as e:
             raise errors.BadRequest(e.message)
 
-
     def to_dict(self):
         raise NotImplementedError
 
