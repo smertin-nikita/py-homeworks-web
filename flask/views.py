@@ -3,7 +3,7 @@ from flask.views import MethodView
 
 from app import app
 from validator import validate
-from models import UserModel, Advertisement
+from models import UserModel, AdvertisementModel
 from schema import USER_CREATE, ADVERTISEMENT_CREATE
 
 
@@ -28,15 +28,15 @@ class UserView(MethodView):
 class AdvertisementView(MethodView):
 
     def get(self, advertisement_id):
-        instance = Advertisement.get_by_id(advertisement_id)
+        instance = AdvertisementModel.get_by_id(advertisement_id)
         return jsonify(instance.to_dict())
 
     @validate('json', ADVERTISEMENT_CREATE)
     def post(self):
-        instance = Advertisement(**request.json)
+        instance = AdvertisementModel(**request.json)
         instance.add()
         return jsonify(instance.to_dict())
 
     def delete(self, advertisement_id):
-        Advertisement.delete_by_id(advertisement_id)
+        AdvertisementModel.delete_by_id(advertisement_id)
         return jsonify({'message': 'NO_CONTENT'})

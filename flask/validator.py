@@ -1,8 +1,7 @@
 
 import jsonschema
 from flask import request
-
-import errors
+from werkzeug.exceptions import BadRequest
 
 
 def validate(source: str, req_schema: dict):
@@ -16,7 +15,7 @@ def validate(source: str, req_schema: dict):
                     instance=getattr(request, source), schema=req_schema,
                 )
             except jsonschema.ValidationError as e:
-                raise errors.BadRequest(e.message)
+                raise BadRequest(e.message)
 
             result = func(*args, **kwargs)
 

@@ -30,5 +30,5 @@ ADVERTISEMENT_CREATE = {
             'type': "number"
         },
     },
-    "required": ["title", "creator_id"]
+    "required": ["title"]
 }

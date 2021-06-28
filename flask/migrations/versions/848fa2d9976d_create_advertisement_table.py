@@ -23,7 +23,7 @@ def upgrade():
         'advertisement',
         sa.Column('id', sa.Integer, primary_key=True),
         sa.Column('title', sa.String(64), index=True, unique=True, nullable=False),
-        sa.Column('description', sa.Text, index=True),
+        sa.Column('description', sa.Text, index=True, nullable=False, default=''),
         sa.Column('creator_id', sa.Integer(), sa.ForeignKey('user.id')),
         sa.Column('created_on', sa.DateTime(), default=datetime.utcnow)
     )
