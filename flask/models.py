@@ -33,6 +33,15 @@ class BaseModelMixin:
         except exc.IntegrityError as e:
             raise BadRequest(str(e.orig))
 
+    def put(self, kwargs):
+        for key, value in kwargs.items():
+            if kwargs[key] is not None:
+                setattr(self, key, value)
+        try:
+            db.session.commit()
+        except exc.IntegrityError as e:
+            raise BadRequest(str(e.orig))
+
     @classmethod
     def find_by_attr(cls, kwargs):
         return cls.query.filter_by(**kwargs).first()
@@ -73,10 +82,6 @@ class UserModel(db.Model, BaseModelMixin):
     def check_password(self, raw_password: str):
         raw_password = f'{raw_password}{config.CONFIG["SALT"]}'
         return self.password == hashlib.md5(raw_password.encode()).hexdigest()
-
-    # @classmethod
-    # def find_by_username(cls, username):
-    #     return cls.query.filter_by(username=username).first()
 
     def to_dict(self):
         return {
