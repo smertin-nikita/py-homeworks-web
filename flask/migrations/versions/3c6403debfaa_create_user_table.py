@@ -21,7 +21,7 @@ def upgrade():
         'user',
         sa.Column('id', sa.Integer, primary_key=True),
         sa.Column('username', sa.String(64), index=True, unique=True, nullable=False),
-        sa.Column('email', sa.String(120), index=True, unique=True),
+        sa.Column('email', sa.String(120), index=True, unique=True, nullable=False, default=''),
         sa.Column('password', sa.String(128)),
     )
 

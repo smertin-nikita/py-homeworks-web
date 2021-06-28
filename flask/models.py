@@ -11,6 +11,14 @@ from app import db
 class BaseModelMixin:
 
     @classmethod
+    def all(cls):
+        objs = cls.query.all()
+        if objs:
+            return objs
+        else:
+            raise errors.NotFound
+
+    @classmethod
     def get_by_id(cls, obj_id):
         obj = cls.query.get(obj_id)
         if obj:
@@ -23,7 +31,7 @@ class BaseModelMixin:
         try:
             db.session.commit()
         except exc.IntegrityError as e:
-            raise errors.BadRequest(e.orig.pgerror)
+            raise errors.BadRequest()
 
     @classmethod
     def delete_by_id(cls, obj_id):
@@ -31,19 +39,19 @@ class BaseModelMixin:
         try:
             db.session.commit()
         except exc.IntegrityError as e:
-            raise errors.BadRequest(e.message)
+            raise errors.BadRequest()
 
     def to_dict(self):
         raise NotImplementedError
 
 
-class User(db.Model, BaseModelMixin):
+class UserModel(db.Model, BaseModelMixin):
 
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
+    email = db.Column(db.String(120), index=True, unique=True, nullable=False, default='')
     password = db.Column(db.String(128))
     advertisements = db.relationship('Advertisement', backref='user')
 
