@@ -11,5 +11,3 @@ db = SQLAlchemy(app)
 api = Api(app)
 jwt = JWTManager(app)
 
-import resources, models
-
