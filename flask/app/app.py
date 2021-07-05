@@ -11,3 +11,8 @@ db = SQLAlchemy(app)
 api = Api(app)
 jwt = JWTManager(app)
 
+
+@app.route('/')
+def index():
+    return 'Hello'
+
