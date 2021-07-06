@@ -28,21 +28,64 @@
 В таблице с пользователями должны быть как минимум следующие поля: идентификатор, почта и хэш пароля.
 
 
-## Запуспк проекта
+## Команды для докера
 
-Установить зависимости:
-```
-pip install -r requirements.txt
-```
+Создаем образ для flask приложения
 
-Необходимо создать базу в postgres, и добавить переменные виртуального окружения с настройками для базы данных:
-```base
-'NAME_DB'
-'USER_DB'
-'PASSWORD_DB'
+```bash
+docker build --tag my-flask .
 ```
 
-Для миграции бд выполнить команду:
+Создаем контейнер и прокидываем в него том с кодом и переменные окружения для подключения к бд. Также подключаем к сети:
+
+```bash
+docker run --name flask-test -p 5000:5000 -v C:\Users\Nikita\PycharmProjects\py-homeworks-web\flask\app:/app -e USER_DB=admin -e NAME_DB=advertisement_db -e PASSWORD_DB=admin --network my-net my-flask
+```
+
+Создаем контейнер для postgres
+
+```bash
+docker run -it -p 5431:5432 --name postgres-test -e POSTGRES_PASSWORD=password --network my-net postgres
+
+```
+
+Заходим в postgres
+
+```bash
+psql -U postgres -h localhost -p 5431 postgres
+```
+
+Создаем пользователя admin
+
+```sql
+create user admin with password 'admin';
+```
+
+Даем ему права на создание бд
+
+```sql
+alter role admin createrole createdb;
+```
+
+Заходим в postgres через admin
+
+```bash
+psql -U admin -h localhost -p 5431 postgres
+```
+
+Создаем бд
+
+```sql
+create database advertisement_db;
+```
+
+Выполняем команду пинг:
+
+```bash
+docker exec flask-test ping postgres-test
+```
+
+~~Для миграции бд выполнить команду:~~
 ```
 alembic upgrade head
 ```
