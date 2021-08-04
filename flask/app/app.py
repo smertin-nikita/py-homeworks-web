@@ -1,7 +1,7 @@
+from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask
 
 import config
 
