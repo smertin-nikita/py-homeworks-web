@@ -1,3 +1,5 @@
+import os
+
 import db_config
 import asyncio
 from pprint import pprint
@@ -56,7 +58,6 @@ async def write_to_db(persons):
 
 
 async def main():
-    print(f'postgresql://{db_config.PGUSER}:{db_config.PGPASSWORD}@127.0.0.1/{db_config.PGDATABASE}')
     await db.set_bind(f'postgresql://{db_config.PGUSER}:{db_config.PGPASSWORD}@127.0.0.1/{db_config.PGDATABASE}')
     persons = await get_persons()
     pprint(persons)
