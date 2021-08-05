@@ -1,9 +1,9 @@
+import db_config
 import asyncio
 from pprint import pprint
 
 import aiohttp as aiohttp
 import requests
-import db_config
 from models import SwPeople, db
 
 
@@ -26,7 +26,7 @@ async def get_names(items_uri):
 async def get_persons(count: int = 5):
     async with aiohttp.client.ClientSession() as session:
         link = "https://swapi.dev/api/people/"
-        tasks = [asyncio.create_task(make_request(session, f'{link}{count}')) for _ in range(1, count + 1)]
+        tasks = [asyncio.create_task(make_request(session, f'{link}{_}')) for _ in range(1, count + 1)]
         return await asyncio.gather(*tasks)
 
 
@@ -37,7 +37,7 @@ async def insert_to_db(data):
         films=await get_names(data['films']),
         gender=data['gender'],
         hair_color=data['hair_color'],
-        height=data['height'],
+        height=int(data['height']),
         homeworld=requests.get(data['homeworld']).json()['name'],
         mass=data['mass'],
         name=data['name'],
@@ -56,9 +56,8 @@ async def write_to_db(persons):
 
 
 async def main():
-    # await db.set_bind(f'postgresql://{db_config.PGUSER}:{db_config.PGPASSWORD}@127.0.0.1:5431/{db_config.PGDATABASE}')
-    await db.set_bind(f'postgresql://postgres:748429itd@127.0.0.1:5431/swapi_db')
-    persons = await get_persons()
+    print(f'postgresql://{db_config.PGUSER}:{db_config.PGPASSWORD}@127.0.0.1/{db_config.PGDATABASE}')
+    await db.set_bind(f'postgresql://{db_config.PGUSER}:{db_config.PGPASSWORD}@127.0.0.1/{db_config.PGDATABASE}')
     persons = await get_persons()
     pprint(persons)
     await write_to_db(persons)
